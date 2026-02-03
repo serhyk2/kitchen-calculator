@@ -1,34 +1,51 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useMemo, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [brutto, setBrutto] = useState("0");
+  const [wastes, setWastes] = useState("0");
+
+  const netto = useMemo(() => {
+    return (+brutto - +wastes).toFixed(2);
+  }, [brutto, wastes]);
+
+  const wastesInPercent = useMemo(() => {
+    return ((+wastes / +brutto) * 100).toFixed(2);
+  }, [brutto, wastes]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="root">
+      <div className="field">
+        <label htmlFor="brutto" className="label">
+          Брутто, г
+        </label>
+        <input
+          id="brutto"
+          className="input"
+          type="number"
+          value={brutto}
+          onInput={(event) => setBrutto(event.currentTarget.value)}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+
+      <div className="field">
+        <label htmlFor="wastes" className="label">
+          Отходы, г
+        </label>
+        <input
+          id="wastes"
+          className="input"
+          type="number"
+          value={wastes}
+          onInput={(event) => setWastes(event.currentTarget.value)}
+        />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+      <div className="result-list">
+        <div className="result">Нетто: {netto} г</div>
+        <div className="result">Отходы: {wastesInPercent}%</div>
+      </div>
+    </div>
   );
 }
 
